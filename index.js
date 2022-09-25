@@ -26,6 +26,7 @@ class Sprite {
         }
         this.color = color
         this.isAttacking
+        this.health = 100
     }
 
     draw() {
@@ -158,12 +159,15 @@ function animate() {
     //detect collision for player
     if (rectangularCollision({ rectangle1: player, rectangle2: enemy }) && player.isAttacking) {
         player.isAttacking = false
-        console.log("player attack successful")
+        enemy.health -= 20
+        document.querySelector('#enemyHealth').style.width = enemy.health +'%'
     }
     //detect collision for enemy
     if (rectangularCollision({ rectangle1: enemy, rectangle2: player }) && enemy.isAttacking) {
         enemy.isAttacking = false
         console.log("enemy attack successful")
+        player.health -= 20
+        document.querySelector('#playerHealth').style.width = player.health +'%'
     }
 }
 
@@ -183,7 +187,7 @@ window.addEventListener('keydown', (event) => {
         case 'w':
             player.velocity.y = -20
             break
-        case 's':
+        case ' ':
             player.attack()
             break
         //enemy
