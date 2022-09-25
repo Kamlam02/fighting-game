@@ -67,6 +67,10 @@ const player = new Fighter({
         attack1: {
             imageSrc: './img/samuraiMack/Attack1.png',
             framesMax: 6,
+        },
+        takeHit: {
+            imageSrc: './img/samuraiMack/Take hit - white silhouette.png',
+            framesMax: 4,
         }
     },
     attackBox: {
@@ -120,6 +124,10 @@ const enemy = new Fighter({
         attack1: {
             imageSrc: './img/kenji/Attack1.png',
             framesMax: 4,
+        },
+        takeHit: {
+            imageSrc: './img/kenji/Take hit.png',
+            framesMax: 3,
         }
     },
     attackBox: {
@@ -204,10 +212,11 @@ function animate() {
         enemy.switchSprite('fall')
     }
 
-    //detect attack collision for player
+    //detect attack collision for player & enemy gets hit
     if (rectangularCollision({ rectangle1: player, rectangle2: enemy }) && player.isAttacking && player.framesCurrent === 4) {
+        enemy.takeHit()
         player.isAttacking = false
-        enemy.health -= 20
+
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
     // if player misses
@@ -215,11 +224,11 @@ function animate() {
         player.isAttacking = false
     }
 
-    //detect attack collision for enemy
+    //detect attack collision for enemy & player gets hit
     if (rectangularCollision({ rectangle1: enemy, rectangle2: player }) && enemy.isAttacking && enemy.framesCurrent === 2) {
+        player.takeHit()
         enemy.isAttacking = false
         console.log("enemy attack successful")
-        player.health -= 20
         document.querySelector('#playerHealth').style.width = player.health + '%'
     }
 
