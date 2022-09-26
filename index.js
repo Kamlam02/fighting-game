@@ -148,10 +148,6 @@ const enemy = new Fighter({
     }
 })
 
-enemy.draw()
-
-console.log(player);
-
 const keys = {
     a: {
         pressed: false
@@ -170,8 +166,6 @@ const keys = {
     }
 }
 
-decreaseTimer()
-
 function animate() {
     window.requestAnimationFrame(animate)
     ctx.fillStyle = 'black'
@@ -181,7 +175,7 @@ function animate() {
 
     // give white overlay
     ctx.fillStyle = 'rgba(255,255,255,  0.15)'
-    ctx.fillRect(0,0, canvas.width, canvas.height)
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     player.update()
     enemy.update()
@@ -263,60 +257,85 @@ animate()
 
 window.addEventListener('keydown', (event) => {
     if (!player.dead) {
-        switch (event.key) {
-            //player
-            case 'd':
-                keys.d.pressed = true
-                player.lastKey = 'd'
-                break
-            case 'a':
-                keys.a.pressed = true
-                player.lastKey = 'a'
-                break
-            case 'w':
-                player.velocity.y = -20
-                break
-            case ' ':
-                player.attack()
-                break
-        }
-        //enemy
-        if (!enemy.dead) {
-            switch (event.key) {
-                case 'ArrowRight':
-                    keys.ArrowRight.pressed = true
-                    enemy.lastKey = 'ArrowRight'
-                    break
-                case 'ArrowLeft':
-                    keys.ArrowLeft.pressed = true
-                    enemy.lastKey = 'ArrowLeft'
-                    break
-                case 'ArrowUp':
-                    enemy.velocity.y = -20
-                    break
-                case 'ArrowDown':
-                    enemy.attack()
-                    break
-            }
-        }
+        playerKeyEvents(event.key)
+    }
+    if (!enemy.dead) {
+        enemyKeyEvents(event.key)
     }
 })
 
 window.addEventListener('keyup', (event) => {
-    switch (event.key) {
-        //player
-        case 'd':
-            keys.d.pressed = false
-            break
-        case 'a':
-            keys.a.pressed = false
-            break
-        //enemy
-        case 'ArrowRight':
-            keys.ArrowRight.pressed = false
-            break
-        case 'ArrowLeft':
-            keys.ArrowLeft.pressed = false
-            break
-    }
+    playerKeyEvents(event.key,true)
+    enemyKeyEvents(event.key,true)
 })
+
+function playerKeyEvents(keyType, keyUp = false) {
+    var keysDown = {
+        'd': function () {
+            keys.d.pressed = true
+            player.lastKey = 'd'
+        },
+        'a': function () {
+            keys.a.pressed = true
+            player.lastKey = 'a'
+        },
+        'w': function () {
+            player.velocity.y = -20
+        },
+        ' ': function () {
+            player.attack()
+        }
+    }
+    var keysUp = {
+        'd': function () {
+            keys.d.pressed = false
+        },
+        'a': function () {
+            keys.a.pressed = false
+        },
+    }
+    try {
+        keysDown[keyType]()
+        if (keyUp) {
+            keysUp[keyType]()
+        }
+    } catch (e) {
+        //eat the TypeError
+    }
+}
+
+function enemyKeyEvents(keyType, keyUp = false) {
+    var keysDown = {
+        'ArrowRight': function () {
+            keys.ArrowRight.pressed = true
+            enemy.lastKey = 'ArrowRight'
+        },
+        'ArrowLeft': function () {
+            keys.ArrowLeft.pressed = true
+            enemy.lastKey = 'ArrowLeft'
+        },
+        'ArrowUp': function () {
+            enemy.velocity.y = -20
+        },
+        'ArrowDown': function () {
+            enemy.attack()
+        }
+    }
+    var keysUp = {
+        'ArrowRight': function () {
+            keys.ArrowRight.pressed = false
+        },
+        'ArrowLeft': function () {
+            keys.ArrowLeft.pressed = false
+        },
+    }
+    try {
+        keysDown[keyType]()
+        if (keyUp) {
+            keysUp[keyType]()
+        }
+    } catch (e) {
+        //eat the TypeError
+    }
+}
+
