@@ -40,41 +40,41 @@ const player = new Fighter({
         x: 0,
         y: 0
     },
-    imageSrc: './img/samuraiMack/Idle.png',
-    framesMax: 8,
+    imageSrc: './img/lui/Idle.png',
+    framesMax: 10,
     scale: 2.5,
     offset: {
-        x: 215,
-        y: 157
+        x: 100,
+        y: 50
     },
     sprites: {
         idle: {
-            imageSrc: './img/samuraiMack/Idle.png',
-            framesMax: 8
+            imageSrc: './img/lui/Idle.png',
+            framesMax: 10
         },
         run: {
-            imageSrc: './img/samuraiMack/Run.png',
+            imageSrc: './img/lui/Run.png',
             framesMax: 8,
         },
         jump: {
-            imageSrc: './img/samuraiMack/Jump.png',
-            framesMax: 2,
+            imageSrc: './img/lui/Going Up.png',
+            framesMax: 3,
         },
         fall: {
-            imageSrc: './img/samuraiMack/Fall.png',
-            framesMax: 2,
+            imageSrc: './img/lui/Going Down.png',
+            framesMax: 3,
         },
         attack1: {
-            imageSrc: './img/samuraiMack/Attack1.png',
-            framesMax: 6,
+            imageSrc: './img/lui/Attack1.png',
+            framesMax: 7,
         },
         takeHit: {
-            imageSrc: './img/samuraiMack/Take hit - white silhouette.png',
-            framesMax: 4,
+            imageSrc: './img/lui/Take Hit.png',
+            framesMax: 3,
         },
         death: {
-            imageSrc: './img/samuraiMack/Death.png',
-            framesMax: 6,
+            imageSrc: './img/lui/Death.png',
+            framesMax: 11,
         }
     },
     attackBox: {
@@ -82,7 +82,7 @@ const player = new Fighter({
             x: 100,
             y: 50
         },
-        width: 160,
+        width: 120,
         height: 50
     }
 })
@@ -105,7 +105,7 @@ const enemy = new Fighter({
     framesMax: 4,
     scale: 2.5,
     offset: {
-        x: 215,
+        x: 240,
         y: 167
     },
     sprites: {
@@ -187,7 +187,6 @@ function animate() {
     enemy.update()
 
     //player movement
-
     player.velocity.x = 0
     if (keys.a.pressed && player.lastKey === 'a') {
         player.velocity.x = -5
@@ -221,13 +220,13 @@ function animate() {
     //enemy jumping
     if (enemy.velocity.y < 0) {
         enemy.switchSprite('jump')
-    } else if (player.velocity.y > 0) {
+    } else if (enemy.velocity.y > 0) {
         enemy.switchSprite('fall')
     }
 
     //detect attack collision for player & enemy gets hit
     if (rectangularCollision({ rectangle1: player, rectangle2: enemy }) && player.isAttacking && player.framesCurrent === 4) {
-        enemy.takeHit()
+        enemy.takeHit(25)
         player.isAttacking = false
 
         gsap.to('#enemyHealth', {
@@ -241,7 +240,7 @@ function animate() {
 
     //detect attack collision for enemy & player gets hit
     if (rectangularCollision({ rectangle1: enemy, rectangle2: player }) && enemy.isAttacking && enemy.framesCurrent === 2) {
-        player.takeHit()
+        player.takeHit(20)
         enemy.isAttacking = false
         console.log("enemy attack successful")
         gsap.to('#playerHealth', {

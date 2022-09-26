@@ -103,7 +103,7 @@ class Fighter extends Sprite {
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
         this.attackBox.position.y = this.position.y + this.attackBox.offset.y
 
-        //drwa attack box
+        //draw attack box
         // ctx.fillRect(
         //     this.attackBox.position.x,
         //     this.attackBox.position.y,
@@ -129,8 +129,8 @@ class Fighter extends Sprite {
         // }, 100)
     }
 
-    takeHit() {
-        this.health -= 20
+    takeHit(damage) {
+        this.health -= damage
         if (this.health <= 0) {
             this.switchSprite('death')
         } else {
